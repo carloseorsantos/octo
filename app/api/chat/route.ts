@@ -19,7 +19,6 @@ export async function POST(req: Request) {
     prompt,
     abortSignal: req.signal,
     system: "You are a helpful AI assistant. Provide clear, concise, and helpful responses.",
-
   })
 
   return result.toUIMessageStreamResponse({

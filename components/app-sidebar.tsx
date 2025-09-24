@@ -2,20 +2,19 @@
 
 import {
   MessageSquareDot,
-  MessageSquareText,
+  PenSquare,
 } from "lucide-react";
 import * as React from "react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 
 const data = {
@@ -26,9 +25,9 @@ const data = {
   },
   navMain: [
     {
-      title: "Chat (Beta)",
+      title: "New chat",
       url: "/chat",
-      icon: MessageSquareText,
+      icon: PenSquare,
       isActive: true,
     },
   ],
@@ -36,30 +35,24 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar variant="inset" {...props}>
+    <Sidebar collapsible="icon" variant="inset" {...props}>
       <SidebarHeader>
         <SidebarMenu>
-          <SidebarMenuItem>
+          <SidebarMenuItem className="flex gap-2 justify-center items-center">
             <SidebarMenuButton size="lg" asChild>
               <a href="/chat">
-                <div className="bg-sidebar- text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <MessageSquareDot className="size-4" />
-                </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">Octo (Beta)</span>
-                  <span className="truncate text-xs">Free</span>
                 </div>
               </a>
             </SidebarMenuButton>
+            <SidebarTrigger className="-ml-1" />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
-      {/* <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter> */}
     </Sidebar>
   );
 }
