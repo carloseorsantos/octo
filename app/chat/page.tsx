@@ -4,7 +4,6 @@ import { AppSidebar } from "@/components/app-sidebar";
 import {
   SidebarInset,
   SidebarProvider,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import type React from "react";
 
@@ -15,6 +14,19 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Send, Bot, User } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const AIModels = [
+  { label: "ChatGPT", models: [{ label: "ChatGPT 5", value: "gpt-5", disabled: true }, { label: "ChatGPT 4.1 Mini", value: "gpt-4.1-mini" }] },
+]
 
 export default function Page() {
   const [input, setInput] = useState("");
@@ -43,15 +55,31 @@ export default function Page() {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset className="max-h-svw">
+      <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2">
           <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
+            <Select defaultValue="gpt-4.1-mini" onValueChange={(value) => console.log(value)}>
+              <SelectTrigger className="w-[200px] cursor-pointer">
+                <SelectValue placeholder="AI Model"/>
+              </SelectTrigger>
+              <SelectContent className="bg-black text-primary-foreground ">
+                {AIModels.map((group, index) => (
+                  <SelectGroup key={index}>
+                    <SelectLabel className="text-muted-foreground">{group.label}</SelectLabel>
+                    {group.models.map((model) => (
+                      <SelectItem disabled={model.disabled} key={model.value} value={model.value}>
+                        {model.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </header>
         <div className="flex flex-1 h-full flex-col gap-4 p-4 pt-0">
           <div className="flex flex-col h-full bg-background">
-            <div className="flex-1 overflow-y-auto px-4 py-6">
+            <div className="h-full max-h-full flex-1 overflow-y-auto px-4 py-6">
               <div className="max-w-3xl mx-auto space-y-6">
                 {messages.length === 0 && (
                   <div className="text-center py-12">
