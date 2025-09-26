@@ -1,11 +1,9 @@
 "use client";
 
+import * as React from "react";
 import {
-  MessageSquareDot,
   PenSquare,
 } from "lucide-react";
-import * as React from "react";
-
 import { NavMain } from "@/components/nav-main";
 import {
   Sidebar,
@@ -16,6 +14,7 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { NavUser } from "./CustomNavUser/nav-user";
 
 const data = {
   user: {
@@ -53,6 +52,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
+        <NavUser />
     </Sidebar>
   );
 }
