@@ -2,7 +2,9 @@
 
 import * as React from "react";
 import {
+  GalleryVerticalEnd,
   PenSquare,
+  Shell,
 } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
 import {
@@ -12,7 +14,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { NavUser } from "./CustomNavUser/nav-user";
 
@@ -40,12 +41,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem className="flex gap-2 justify-center items-center">
             <SidebarMenuButton size="lg" asChild>
               <a href="/chat">
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Octo (Beta)</span>
+                <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                  <Shell className="size-4" />
+                </div>
+                <div className="flex flex-col gap-0.5 leading-none">
+                  <span className="font-medium">Octo</span>
+                  {/* <span className="">beta</span> */}
                 </div>
               </a>
             </SidebarMenuButton>
-            <SidebarTrigger className="-ml-1" />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
