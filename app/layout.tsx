@@ -4,6 +4,7 @@ import { Figtree } from "next/font/google"
 import { GeistMono } from "geist/font/mono"
 import { Instrument_Serif } from "next/font/google"
 import "./globals.css"
+import Providers from "@/components/providers"
 
 const figtree = Figtree({
   subsets: ["latin"],
@@ -42,7 +43,11 @@ export default function RootLayout({
             }
         `}</style>
       </head>
-      <body className={`${figtree.variable} ${instrumentSerif.variable}`}>{children}</body>
+      <body className={`${figtree.variable} ${instrumentSerif.variable}`}>
+        <Providers>
+          {children}
+        </Providers>
+        </body>
     </html>
   )
 }

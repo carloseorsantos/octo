@@ -4,6 +4,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import {
   SidebarInset,
   SidebarProvider,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import type React from "react";
 
@@ -23,17 +24,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-const AIModels = [
-  { label: "ChatGPT", models: [{ label: "ChatGPT 5", value: "gpt-5", disabled: true }, { label: "ChatGPT 4.1 Mini", value: "gpt-4.1-mini" }] },
-]
+import { Separator } from "@/components/ui/separator";
+import { AIModels } from "@/utils/aiModels";
+import { useAIModelStore } from "@/store/useAIModelStore";
 
 export default function Page() {
   const [input, setInput] = useState("");
+  const { model, setModel } = useAIModelStore() as { model: string; setModel: (model: string) => void };
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { messages, sendMessage, status } = useChat({
-    transport: new DefaultChatTransport({ api: "/api/chat" }),
+    transport: new DefaultChatTransport({ api: "/api/chat"}),
   });
 
   const scrollToBottom = () => {
@@ -58,16 +59,30 @@ export default function Page() {
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2">
           <div className="flex items-center gap-2 px-4">
-            <Select defaultValue="gpt-4.1-mini" onValueChange={(value) => console.log(value)}>
+            <SidebarTrigger className="-ml-1" />
+                <Separator
+                  orientation="vertical"
+                  className="mr-2 data-[orientation=vertical]:h-4"
+                />
+            <Select
+              defaultValue={model}
+              onValueChange={(value) => setModel(value)}
+            >
               <SelectTrigger className="w-[200px] cursor-pointer">
-                <SelectValue placeholder="AI Model"/>
+                <SelectValue placeholder="AI Model" />
               </SelectTrigger>
               <SelectContent className="bg-black text-primary-foreground ">
                 {AIModels.map((group, index) => (
                   <SelectGroup key={index}>
-                    <SelectLabel className="text-muted-foreground">{group.label}</SelectLabel>
+                    <SelectLabel className="text-muted-foreground">
+                      {group.label}
+                    </SelectLabel>
                     {group.models.map((model) => (
-                      <SelectItem disabled={model.disabled} key={model.value} value={model.value}>
+                      <SelectItem
+                        disabled={model.disabled}
+                        key={model.value}
+                        value={model.value}
+                      >
                         {model.label}
                       </SelectItem>
                     ))}

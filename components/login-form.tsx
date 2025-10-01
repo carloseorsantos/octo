@@ -1,7 +1,6 @@
-import { GalleryVerticalEnd } from "lucide-react"
-
-import { cn } from "@/lib/utils"
-import { CustomGoogleLoginButton } from "./CustomGoogleLoginButton/CustomGoogleLoginButton"
+import { Shell } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { CustomGoogleLoginButton } from "./CustomGoogleLoginButton/CustomGoogleLoginButton";
 
 export function LoginForm({
   className,
@@ -17,7 +16,7 @@ export function LoginForm({
               className="flex flex-col items-center gap-2 font-medium"
             >
               <div className="flex size-8 items-center justify-center rounded-md">
-                <GalleryVerticalEnd className="size-6" />
+                <Shell className="size-6" />
               </div>
               <span className="sr-only">Octo AI</span>
             </a>
@@ -32,9 +31,9 @@ export function LoginForm({
         </div>
       </form>
       <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+        By clicking continue, you agree to our Terms of Service{" "}
+        and Privacy Policy.
       </div>
     </div>
-  )
+  );
 }
