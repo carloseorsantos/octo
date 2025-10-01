@@ -1,15 +1,16 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
     const { data: session } = useSession();
+    const router = useRouter();
   
     if (session) {
-      redirect("/chat");
+      router.push("/chat");
     } else {
-      redirect("/login");
+      router.push("/login");
     }
     
   return <></>
