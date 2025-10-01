@@ -25,23 +25,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-
-const AIModels = [
-  {
-    label: "ChatGPT",
-    models: [
-      { label: "ChatGPT 5", value: "gpt-5", disabled: true },
-      { label: "ChatGPT 4.1 Mini", value: "gpt-4.1-mini" },
-    ],
-  },
-];
+import { AIModels } from "@/utils/aiModels";
+import { useAIModelStore } from "@/store/useAIModelStore";
 
 export default function Page() {
   const [input, setInput] = useState("");
+  const { model, setModel } = useAIModelStore() as { model: string; setModel: (model: string) => void };
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { messages, sendMessage, status } = useChat({
-    transport: new DefaultChatTransport({ api: "/api/chat" }),
+    transport: new DefaultChatTransport({ api: "/api/chat"}),
   });
 
   const scrollToBottom = () => {
@@ -72,8 +65,8 @@ export default function Page() {
                   className="mr-2 data-[orientation=vertical]:h-4"
                 />
             <Select
-              defaultValue="gpt-4.1-mini"
-              onValueChange={(value) => console.log(value)}
+              defaultValue={model}
+              onValueChange={(value) => setModel(value)}
             >
               <SelectTrigger className="w-[200px] cursor-pointer">
                 <SelectValue placeholder="AI Model" />

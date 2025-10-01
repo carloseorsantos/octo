@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import {
-  GalleryVerticalEnd,
   PenSquare,
   Shell,
 } from "lucide-react";
@@ -46,7 +45,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-medium">Octo</span>
-                  {/* <span className="">beta</span> */}
                 </div>
               </a>
             </SidebarMenuButton>
