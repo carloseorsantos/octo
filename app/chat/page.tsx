@@ -1,5 +1,7 @@
 "use client";
 
+import {
+  Shell} from "lucide-react";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
   SidebarInset,
@@ -27,14 +29,22 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { AIModels } from "@/utils/aiModels";
 import { useAIModelStore } from "@/store/useAIModelStore";
+import { useSession } from "next-auth/react";
+import { getFirstName } from "@/utils/stringUtils";
+import { Skeleton } from "@/components/ui/skeleton";
+import Message from "@/components/markdown-message";
 
 export default function Page() {
   const [input, setInput] = useState("");
-  const { model, setModel } = useAIModelStore() as { model: string; setModel: (model: string) => void };
+  const { data: session } = useSession();
+  const { model, setModel } = useAIModelStore() as {
+    model: string;
+    setModel: (model: string) => void;
+  };
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { messages, sendMessage, status } = useChat({
-    transport: new DefaultChatTransport({ api: "/api/chat"}),
+    transport: new DefaultChatTransport({ api: "/api/chat" }),
   });
 
   const scrollToBottom = () => {
@@ -57,13 +67,13 @@ export default function Page() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2">
+        <header className="flex h-16 shrink-0 items-center gap-2 fixed top-0 w-full bg-black/50 backdrop-blur z-10">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
-                <Separator
-                  orientation="vertical"
-                  className="mr-2 data-[orientation=vertical]:h-4"
-                />
+            <Separator
+              orientation="vertical"
+              className="mr-2 data-[orientation=vertical]:h-4"
+            />
             <Select
               defaultValue={model}
               onValueChange={(value) => setModel(value)}
@@ -90,19 +100,41 @@ export default function Page() {
                 ))}
               </SelectContent>
             </Select>
+            <Separator
+              orientation="vertical"
+              className="ml-2mr-2 data-[orientation=vertical]:h-4 hidden md:block"
+            />
+            <Select defaultValue="Default" onValueChange={(value) => setModel(value)}>
+              <SelectTrigger className="w-[200px] cursor-pointer hidden md:block">
+                <SelectValue placeholder="Choose an Agent" />
+              </SelectTrigger>
+              <SelectContent className="bg-black text-primary-foreground ">
+                <SelectGroup>
+                  <SelectLabel className="text-muted-foreground">
+                    Most Popular Agents
+                  </SelectLabel>
+                  <SelectItem
+                    value="Default"
+                  >
+                    AI Assistant
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         </header>
-        <div className="flex flex-1 h-full flex-col gap-4 p-4 pt-0">
+        <div className="flex flex-1 h-full flex-col gap-4 p-4 pt-0 mt-16">
           <div className="flex flex-col h-full bg-background">
             <div className="h-full max-h-full flex-1 overflow-y-auto px-4 py-6">
               <div className="max-w-3xl mx-auto space-y-6">
                 {messages.length === 0 && (
                   <div className="text-center py-12">
                     <div className="flex items-center justify-center w-16 h-16 rounded-full bg-secondary/10 mx-auto mb-4">
-                      <Bot className="w-8 h-8 text-secondary" />
+                      <Shell className="w-8 h-8 text-secondary" />
                     </div>
                     <h2 className="font-sans font-semibold text-xl text-foreground mb-2">
-                      How can I help you today?
+                      Hey {getFirstName(session?.user?.name ?? "")}, How can I
+                      help you today?
                     </h2>
                     <p className="text-muted-foreground">
                       Start a conversation by typing a message below.
@@ -117,21 +149,22 @@ export default function Page() {
                       message.role === "user" ? "justify-end" : "justify-start"
                     }`}
                   >
-                    {message.role === "assistant" && (
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-secondary flex-shrink-0 mt-1">
-                        <Bot className="w-4 h-4 text-secondary-foreground" />
-                      </div>
-                    )}
-
                     <Card
-                      className={`max-w-[80%] p-2 ${
+                      className={`px-[16px] py-[8px] text-base border-none ${
                         message.role === "user"
-                          ? "bg-secondary text-secondary-foreground"
-                          : "bg-card text-card-foreground"
+                          ? "bg-[#323232d9] text-white"
+                          : "bg-transparent text-white w-full"
                       }`}
                     >
-                      <div className="font-sans text-sm leading-relaxed text-pretty">
+                      <div className={"text-base text-pretty"}>
                         {message.parts.map((part, index) => {
+                          if (message.role !== "user") {
+                            if(part.type === "text") {
+                              return (
+                                <Message key={index} content={part.text} />
+                              )
+                            }
+                          }
                           if (part.type === "text") {
                             return (
                               <div key={index} className="whitespace-pre-wrap">
@@ -143,41 +176,13 @@ export default function Page() {
                         })}
                       </div>
                     </Card>
-
-                    {message.role === "user" && (
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted flex-shrink-0 mt-1">
-                        <User className="w-4 h-4 text-muted-foreground" />
-                      </div>
-                    )}
                   </div>
                 ))}
-
-                {status === "streaming" && (
-                  <div className="flex gap-4 justify-start">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-secondary flex-shrink-0 mt-1">
-                      <Bot className="w-4 h-4 text-secondary-foreground" />
-                    </div>
-                    <Card className="max-w-[80%] p-4 bg-card text-card-foreground">
-                      <div className="flex items-center gap-2">
-                        <div className="flex space-x-1">
-                          <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                          <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                          <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"></div>
-                        </div>
-                        <span className="text-sm text-muted-foreground">
-                          Thinking...
-                        </span>
-                      </div>
-                    </Card>
-                  </div>
-                )}
-
                 <div ref={messagesEndRef} />
               </div>
             </div>
 
-            {/* Input Form */}
-            <div className="px-4 py-4">
+            <div className="px-4 py-4 fixed bottom-0 left-0 right-0 bg-black/50 backdrop-blur">
               <div className="max-w-3xl mx-auto">
                 <form onSubmit={handleSubmit} className="flex gap-3">
                   <Input

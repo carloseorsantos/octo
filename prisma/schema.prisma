@@ -18,6 +18,8 @@ model User {
   createdAt     DateTime @default(now())
   accounts      Account[]
   sessions      Session[]
+  systems   System[]
+  chats     Chat[]
 }
 
 model Account {
@@ -44,4 +46,48 @@ model Session {
   userId       String
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expires      DateTime
+}
+
+model System {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  prompt      String
+  visibility  Visibility @default(PRIVATE)
+  userId      String?
+  user        User?      @relation(fields: [userId], references: [id])
+  chats       Chat[]
+  createdAt   DateTime   @default(now())
+}
+
+model Chat {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  systemId  String
+  system    System    @relation(fields: [systemId], references: [id])
+  messages  Message[]
+  createdAt DateTime  @default(now())
+}
+
+enum Visibility {
+  PRIVATE
+  PUBLIC
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  chatId    String
+  role      Role
+  content   String
+  tokens    Int?
+  createdAt DateTime @default(now())
+
+  chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  SYSTEM
+  USER
+  ASSISTANT
 }
