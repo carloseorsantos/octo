@@ -102,10 +102,10 @@ export default function Page() {
             </Select>
             <Separator
               orientation="vertical"
-              className="ml-2mr-2 data-[orientation=vertical]:h-4 hidden md:block"
+              className="ml-2mr-2 data-[orientation=vertical]:h-4 hidden md:flex"
             />
             <Select defaultValue="Default" onValueChange={(value) => setModel(value)}>
-              <SelectTrigger className="w-[200px] cursor-pointer hidden md:block">
+              <SelectTrigger className="w-[200px] cursor-pointer hidden md:flex">
                 <SelectValue placeholder="Choose an Agent" />
               </SelectTrigger>
               <SelectContent className="bg-black text-primary-foreground ">
@@ -181,15 +181,16 @@ export default function Page() {
                 <div ref={messagesEndRef} />
               </div>
             </div>
-
-            <div className="px-4 py-4 fixed bottom-0 left-0 right-0 bg-black/50 backdrop-blur">
-              <div className="max-w-3xl mx-auto">
-                <form onSubmit={handleSubmit} className="flex gap-3">
+          </div>
+        </div>
+        <div className="flex h-16 shrink-0 items-center justify-center bottom-0 w-full bg-black/50 backdrop-blur z-10">
+              <div className="w-full">
+                <form onSubmit={handleSubmit} className="flex gap-3 max-w-1/3">
                   <Input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Ask me anything..."
-                    className="flex-1 border-border focus:ring-2 focus:ring-ring focus:border-transparent outline-none"
+                    className="border-border focus:ring-2 focus:ring-ring focus:border-transparent outline-none"
                     disabled={status === "streaming"}
                   />
                   <Button
@@ -203,8 +204,6 @@ export default function Page() {
                 </form>
               </div>
             </div>
-          </div>
-        </div>
       </SidebarInset>
     </SidebarProvider>
   );
